@@ -1,0 +1,40 @@
+
+```plantuml
+@startuml
+!include <C4/C4_Container>
+
+AddRelTag("async", $lineStyle=DashedLine())
+
+!include <cloudinsight/nginx>
+
+title Container:SearchArticle
+
+Person(customer, "Пользователь", " ")
+
+System(load_balancer, "LoadBalancer", "nginx", $sprite="nginx")
+
+System_Boundary(service.search_article, "Article Search Service") {
+    Container(service.app, "Article Search Service", "Поиск статей")
+    ContainerDb(service.article_search_engine, "Поисковый движок - модель чтения")
+    ContainerDb(service.article_DB, "Реляционная БД - модель записи")
+    ContainerQueue(service.article_consumer, "Консюмер статей", "consumer")
+    ContainerQueue(service.article_comments_consumer, "Консюмер оценок и комментариев для статей", "consumer")
+    ContainerQueue(service.article_sync_queue, "Внутренняя очередь обновления данных в модели чтения", "queue")
+}
+
+System(kafka, "Kafka", " ")
+
+Rel(customer, load_balancer, "Поиск статей", "REST")
+Rel(load_balancer, service.app, "Поиск статей", "REST")
+Rel(service.app, service.article_search_engine, "Поиск статей в БД")
+
+Rel(kafka, service.article_consumer, "Получаем информацию о статьях", "KafkaAPI", $tags="async")
+Rel(kafka, service.article_comments_consumer, "Получаем информацию о комментариях и оценках для статей", "KafkaAPI", $tags="async")
+
+Rel(service.article_consumer, service.article_DB, "Сохраняем информацию в БД")
+Rel(service.article_comments_consumer, service.article_DB, "Сохраняем информацию в БД")
+Rel(service.article_DB, service.article_sync_queue, "Обновляем информацию в модели чтения")
+Rel(service.article_sync_queue, service.article_search_engine, "Обновляем информацию в модели чтения")
+
+@enduml
+```

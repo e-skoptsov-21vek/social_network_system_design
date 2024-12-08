@@ -1,0 +1,37 @@
+
+```plantuml
+@startuml
+!include <C4/C4_Container>
+
+AddRelTag("async", $lineStyle=DashedLine())
+
+!include <cloudinsight/nginx>
+
+title Container:Article
+
+Person(customer, "Пользователь", " ")
+
+System(load_balancer, "LoadBalancer", "nginx", $sprite="nginx")
+
+System_Boundary(service.article, "Article Service") {
+    Container(service.app, "Article Service", "CRUD статей + комментарии и отзывы")
+    ContainerDb(service.article_DB, "Реляционная БД")
+    ContainerQueue(service.article_outbox, "Outbox статей", "outbox")
+    ContainerQueue(service.article_comments_outbox, "Outbox оценок и комментариев для статей", "outbox")
+}
+
+System(kafka, "Kafka", " ")
+System(file_storage, "FileStorage", "Файловое хранилище хранилище")
+
+Rel(customer, load_balancer, "CRUD статей + комментарии и отзывы", "REST")
+Rel(load_balancer, service.app, "CRUD статей + комментарии и отзывы", "REST")
+Rel(service.app, service.article_DB, "Сохраняем информацию в БД")
+Rel(service.app, file_storage, "Загружаем фотографии", "REST")
+Rel(service.article_DB, service.article_outbox, "Отправляем статьи в обмены")
+Rel(service.article_DB, service.article_comments_outbox, "Отправляем комментарии и оценки для статей в обмены")
+
+Rel(service.article_outbox, kafka, "Отправляем статьи в обмены", "KafkaAPI", $tags="async")
+Rel(service.article_comments_outbox, kafka, "Отправляем комментарии и оценки для статей в обмены", "KafkaAPI", $tags="async")
+
+@enduml
+```
