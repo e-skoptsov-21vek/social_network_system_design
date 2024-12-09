@@ -1,0 +1,43 @@
+
+```plantuml
+@startuml
+!include <C4/C4_Container>
+
+AddRelTag("async", $lineStyle=DashedLine())
+
+!include <cloudinsight/nginx>
+
+title Container:UserFeeds
+
+Person(customer, "Пользователь", " ")
+
+System(load_balancer, "LoadBalancer", "nginx", $sprite="nginx")
+
+System_Boundary(service.user_feeds, "UserFeeds Service") {
+    Container(service.app, "UserFeeds Service", "Получение лент пользователей")
+    ContainerDb(service.user_feeds_storage, "Хранилище ключ-значение - модель чтения")
+    ContainerDb(service.write_DB, "Реляционная БД - модель записи")
+    ContainerQueue(service.article_consumer, "Консюмер статей", "consumer")
+    ContainerQueue(service.article_comments_consumer, "Консюмер оценок и комментариев для статей", "consumer")
+    ContainerQueue(service.user_subscription_consumer, "Консюмер подписок пользователей", "consumer")
+    ContainerQueue(service.user_feeds_queue, "Внутренняя очередь для задач обновления лент пользователей", "queue")
+}
+
+System(kafka, "Kafka", " ")
+
+Rel(customer, load_balancer, "Получение лент пользователей", "REST")
+Rel(load_balancer, service.app, "Получение лент пользователей", "REST")
+Rel(service.app, service.user_feeds_storage, "Поиск статей в БД")
+
+Rel(kafka, service.article_consumer, "Получаем информацию о статьях", "KafkaAPI", $tags="async")
+Rel(kafka, service.article_comments_consumer, "Получаем информацию о комментариях и оценках для статей", "KafkaAPI", $tags="async")
+Rel(kafka, service.user_subscription_consumer, "Получаем информацию о подписках пользователей", "KafkaAPI", $tags="async")
+
+Rel(service.article_consumer, service.write_DB, "Сохраняем информацию в БД")
+Rel(service.article_comments_consumer, service.write_DB, "Сохраняем информацию в БД")
+Rel(service.user_subscription_consumer, service.write_DB, "Сохраняем информацию в БД")
+Rel(service.write_DB, service.user_feeds_queue, "Обновляем информацию в модели чтения")
+Rel(service.user_feeds_queue, service.user_feeds_storage, "Обновляем информацию в модели чтения")
+
+@enduml
+```

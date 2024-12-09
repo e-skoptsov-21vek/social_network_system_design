@@ -1,0 +1,33 @@
+
+```plantuml
+@startuml
+!include <C4/C4_Container>
+
+AddRelTag("async", $lineStyle=DashedLine())
+
+!include <cloudinsight/nginx>
+
+title Container:Users
+
+Person(customer, "Пользователь", " ")
+
+System(load_balancer, "LoadBalancer", "nginx", $sprite="nginx")
+
+System_Boundary(service.article, "Users Service") {
+    Container(service.app, "Users Service", "Управление подписками")
+    ContainerDb(service.users_DB, "Реляционная БД")
+    ContainerQueue(service.user_subscription_outbox, "Outbox подписок", "outbox")
+}
+
+System(kafka, "Kafka", " ")
+
+Rel(customer, load_balancer, "Управление подписками", "REST")
+Rel(load_balancer, service.app, "Управление подписками", "REST")
+Rel(service.app, service.users_DB, "Сохраняем информацию в БД")
+
+Rel(service.users_DB, service.user_subscription_outbox, "Отправляем подписки в обмены")
+
+Rel(service.user_subscription_outbox, kafka, "Отправляем подписки в обмены", "KafkaAPI", $tags="async")
+
+@enduml
+```

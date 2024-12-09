@@ -1,0 +1,38 @@
+```plantuml
+@startuml
+!include <C4/C4_Context>
+AddRelTag("async", $lineStyle=DashedLine())
+
+title Context
+
+Person(customer, "Пользователь", " ")
+
+System(client, "Client", "Web-mobile/Web-desktop/Application")
+
+System(cdn, "CDN", "CDN с фотографиями")
+System(file_storage, "FileStorage", "Файловое хранилище хранилище")
+
+System(service.articles, "Article", "Сервис постов")
+System(service.search_articles, "SearchArticle", "Сервис поиска постов")
+System(service.users, "Users", "Сервис пользователей")
+System(service.user_feeds, "UserFeeds", "Сервис лент пользователей")
+
+Rel(customer, client, "Использует соц. сеть", "UI")
+Rel(client, cdn, "Получение фотографий", "REST")
+Rel(cdn, file_storage, "Получение фотографий отсутствующих на CDN", "REST")
+Rel(service.articles, file_storage, "Загрузка фотографий", "REST")
+
+Rel(client, service.articles, "CRUD постов", "REST")
+Rel(client, service.articles, "Оценки и комментарии для постов", "REST")
+Rel(client, service.search_articles, "Поиск постов", "REST")
+Rel(client, service.users, "Управление подписками пользователя", "REST")
+Rel(client, service.user_feeds, "Просмотр ленты пользователя", "REST")
+
+Rel(service.articles, service.search_articles, "Информация о статьях", "KafkaAPI", $tags="async")
+Rel(service.articles, service.search_articles, "Информация об оценках и комментариях статей", "KafkaAPI", $tags="async")
+Rel(service.articles, service.user_feeds, "Информация о статьях", "KafkaAPI", $tags="async")
+Rel(service.articles, service.user_feeds, "Информация об оценках и комментариях статей", "KafkaAPI", $tags="async")
+Rel(service.users, service.user_feeds, "Информация о пользователях и их подписках", "KafkaAPI", $tags="async")
+
+@enduml
+```
