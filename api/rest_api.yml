@@ -1,0 +1,635 @@
+openapi: 3.0.3
+info:
+  title: Соц. сеть для путешественников
+  description: Описание API соц. сети для путешественников
+  version: 1.0.0
+
+tags:
+  - name: article_admin
+    description: Управление постами путешественников
+  - name: search_article
+    description: Посты путешественников
+  - name: review
+    description: Оценки и комментарии к постам
+  - name: reaction
+    description: Реакции к постам
+  - name: subscription
+    description: Подписки пользователей
+  - name: feed
+    description: Ленты пользователей
+
+paths:
+  /article/{id}:
+    get:
+      tags:
+        - article_admin
+      summary: Получение статьи
+      description: Получение по ID
+      operationId: getArticle
+      parameters:
+        - name: id
+          in: path
+          description: ID сущности
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ManagedArticle'
+        '400':
+          description: Некорректный ID
+        '404':
+          description: Сущность не найдена
+        '422':
+          description: Ошбика валидации
+
+    put:
+      tags:
+        - article_admin
+      summary: Обновление статьи
+      description: Обновление статьи по ID
+      operationId: updateArticle
+      parameters:
+        - name: id
+          in: path
+          description: ID сущности
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Обновление существующей статьи в хранилище
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ManagedArticle'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ManagedArticle'
+        '400':
+          description: Некорректный ID
+        '404':
+          description: Сущность не найдена
+        '422':
+          description: Ошбика валидации
+
+    delete:
+      tags:
+        - article_admin
+      summary: Удаление статьи
+      description: Удаление статьи по ID
+      operationId: deleteArticle
+      parameters:
+        - name: id
+          in: path
+          description: ID сущности
+          required: true
+          schema:
+            type: integer
+      responses:
+        '400':
+          description: Некорректный ID
+        '404':
+          description: Сущность не найдена
+        '422':
+          description: Ошбика валидации
+
+  /article/byUser/{user_id}/list:
+    get:
+      tags:
+        - article_admin
+      summary: Получение статей пользователя
+      description: Получение статей пользователя
+      operationId: getArticleByUser
+      parameters:
+        - name: user_id
+          in: path
+          description: ID пользователя
+          required: true
+          schema:
+            type: integer
+        - name: page
+          in: query
+          description: Номер страницы
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ManagedArticle'
+        '404':
+          description: Сущность не найдена
+        '422':
+          description: Ошбика валидации
+
+  /article:
+    post:
+      tags:
+        - article_admin
+      summary: Создание статьи
+      description: Создание статьи
+      operationId: createArticle
+      requestBody:
+        description: Создание статьи в хранилище
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatedArticle'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ManagedArticle'
+        '404':
+          description: Сущность не найдена
+        '422':
+          description: Ошбика валидации
+
+  /article-search:
+    get:
+      tags:
+        - search_article
+      summary: Поиск статей пользователя
+      description: Поиск статей пользователя
+      operationId: searchArticles
+      parameters:
+        - name: query
+          in: query
+          description: Текстовый запрос
+          required: true
+          schema:
+            type: string
+        - name: latitude
+          in: query
+          description: Широта
+          required: true
+          schema:
+            type: number
+        - name: longitude
+          in: query
+          description: Долгота
+          required: true
+          schema:
+            type: number
+        - name: sort
+          in: query
+          description: Сортировка
+          required: true
+          schema:
+            type: string
+            enum:
+              - popularity
+              - relevance
+        - name: page
+          in: query
+          description: Номер страницы
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ViewedArticle'
+        '404':
+          description: Сущность не найдена
+        '422':
+          description: Ошбика валидации
+
+  /review/{id}:
+    get:
+      tags:
+        - review
+      summary: Получение отзыва
+      description: Получение по ID
+      operationId: getReview
+      parameters:
+        - name: id
+          in: path
+          description: ID сущности
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+        '400':
+          description: Некорректный ID
+        '404':
+          description: Сущность не найдена
+        '422':
+          description: Ошбика валидации
+
+    put:
+      tags:
+        - review
+      summary: Обновление отзыва
+      description: Обновление отзыва
+      operationId: updateReview
+      parameters:
+        - name: id
+          in: path
+          description: ID сущности
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Обновление существующего отзыва в хранилище
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Review'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+        '400':
+          description: Некорректный ID
+        '404':
+          description: Сущность не найдена
+        '422':
+          description: Ошбика валидации
+
+    delete:
+      tags:
+        - review
+      summary: Удаление отзыва
+      description: Удаление отзыва
+      operationId: deleteReview
+      parameters:
+        - name: id
+          in: path
+          description: ID сущности
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+        '404':
+          description: Отзыв не найдена
+        '422':
+          description: Ошбика валидации
+
+  /review/byArticle/{article_id}/list:
+    get:
+      tags:
+        - review
+      summary: Получение отзывов по статье
+      description:  Получение отзывов по статье
+      operationId: getReviewByArticle
+      parameters:
+        - name: article_id
+          in: path
+          description: ID статьи
+          required: true
+          schema:
+            type: integer
+        - name: page
+          in: query
+          description: Номер страницы
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Review'
+        '404':
+          description: Сущность не найдена
+        '422':
+          description: Ошбика валидации
+
+  /review:
+    post:
+      tags:
+        - review
+      summary: Создание отзыва
+      description: Создание отзыва
+      operationId: createReview
+      requestBody:
+        description: Создание отзыва в хранилище
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Review'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+        '404':
+          description: Сущность не найдена
+        '422':
+          description: Ошбика валидации
+
+  /article/{article_id}/reaction/{reaction}/action/{action}:
+    put:
+      tags:
+        - reaction
+      summary: Управление реакциями
+      description: Управление реакциями
+      operationId: updateReaction
+      parameters:
+        - name: article_id
+          in: path
+          description: ID статьи
+          required: true
+          schema:
+            type: integer
+        - name: reaction
+          in: path
+          description: Тип реакции
+          required: true
+          schema:
+            type: string
+            enum:
+              - like
+              - fire
+              - sad
+        - name: action
+          in: path
+          description: Тип реакции
+          required: true
+          schema:
+            type: string
+            enum:
+              - add
+              - retract
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Некорректный ID
+        '404':
+          description: Сущность не найдена
+        '422':
+          description: Ошбика валидации
+
+  /subscription/{user_id}/target/{another_user_id}/action/{action}:
+    put:
+      tags:
+        - subscription
+      summary: Управление подписками
+      description: Управление подписками
+      operationId: updateSubscription
+      parameters:
+        - name: user_id
+          in: path
+          description: ID пользователя, который подписывается
+          required: true
+          schema:
+            type: integer
+        - name: another_user_id
+          in: path
+          description: ID пользователя, на которого подписываются
+          required: true
+          schema:
+            type: integer
+        - name: action
+          in: path
+          description: Действие
+          required: true
+          schema:
+            type: string
+            enum:
+              - subscribe
+              - unsubscribe
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Некорректный ID
+        '404':
+          description: Сущность не найдена
+        '422':
+          description: Ошбика валидации
+
+  /feed/{user_id}:
+    get:
+      tags:
+        - feed
+      summary: Лента пользователя
+      description: Получение ленты пользователя
+      operationId: getFeed
+      parameters:
+        - name: user_id
+          in: path
+          description: ID пользователя
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ViewedArticle'
+        '404':
+          description: Сущность не найдена
+        '422':
+          description: Ошбика валидации
+
+components:
+  schemas:
+    CreatedArticle:
+      type: object
+      required:
+        - id
+        - text
+        - user_id
+        - latitude
+        - longitude
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        text:
+          type: string
+          format: text
+          example: Не очень длинный текст
+          maxLength: 1000
+        user_id:
+          type: integer
+          format: int64
+          example: 123
+        latitude:
+          type: number
+          description: Широта
+        longitude:
+          type: number
+          description: Долгота
+        images:
+          type: array
+          maxLength: 5
+          items:
+            type: string
+            format: binary
+    ManagedArticle:
+      type: object
+      required:
+        - id
+        - text
+        - user_id
+        - latitude
+        - longitude
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        text:
+          type: string
+          format: text
+          example: Не очень длинный текст
+          maxLength: 1000
+        user_id:
+          type: integer
+          format: int64
+          example: 123
+        latitude:
+          type: number
+          description: Широта
+        longitude:
+          type: number
+          description: Долгота
+        images:
+          type: array
+          maxLength: 5
+          items:
+            type: string
+            format: url
+            example: cdn.com/img/path/to/file/jpeg
+    ViewedArticle:
+      type: object
+      required:
+        - id
+        - text
+        - user_id
+        - latitude
+        - longitude
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        text:
+          type: string
+          format: text
+          example: Не очень длинный текст
+          maxLength: 1000
+        user_id:
+          type: integer
+          format: int64
+          example: 123
+        latitude:
+          type: number
+          description: Широта
+        longitude:
+          type: number
+          description: Долгота
+        images:
+          type: array
+          maxLength: 5
+          items:
+            type: string
+            format: url
+            example: cdn.com/img/path/to/file/jpeg
+        reactions:
+          $ref: '#/components/schemas/Reactions'
+    Review:
+      type: object
+      required:
+        - id
+        - text
+        - user_id
+        - article_id
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        text:
+          type: string
+          format: text
+          example: Не очень длинный текст
+          maxLength: 100
+        user_id:
+          type: integer
+          format: int64
+          example: 123
+        article_id:
+          type: integer
+          format: int64
+          example: 456
+        rating:
+          type: integer
+          enum:
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+    Reactions:
+      type: object
+      required:
+        - id
+        - article_id
+        - items
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                enum:
+                  - like
+                  - fire
+                  - sad
+              count:
+                type: integer
+                format: int64
+                example: 10
