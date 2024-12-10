@@ -45,7 +45,9 @@ paths:
         '404':
           description: Сущность не найдена
         '422':
-          description: Ошбика валидации
+          description: Ошибка валидации
+        '500':
+          description: Ошибка сервера
 
     put:
       tags:
@@ -79,7 +81,9 @@ paths:
         '404':
           description: Сущность не найдена
         '422':
-          description: Ошбика валидации
+          description: Ошибка валидации
+        '500':
+          description: Ошибка сервера
 
     delete:
       tags:
@@ -100,7 +104,9 @@ paths:
         '404':
           description: Сущность не найдена
         '422':
-          description: Ошбика валидации
+          description: Ошибка валидации
+        '500':
+          description: Ошибка сервера
 
   /article/byUser/{user_id}/list:
     get:
@@ -134,7 +140,9 @@ paths:
         '404':
           description: Сущность не найдена
         '422':
-          description: Ошбика валидации
+          description: Ошибка валидации
+        '500':
+          description: Ошибка сервера
 
   /article:
     post:
@@ -160,7 +168,9 @@ paths:
         '404':
           description: Сущность не найдена
         '422':
-          description: Ошбика валидации
+          description: Ошибка валидации
+        '500':
+          description: Ошибка сервера
 
   /article-search:
     get:
@@ -215,7 +225,9 @@ paths:
         '404':
           description: Сущность не найдена
         '422':
-          description: Ошбика валидации
+          description: Ошибка валидации
+        '500':
+          description: Ошибка сервера
 
   /review/{id}:
     get:
@@ -243,7 +255,9 @@ paths:
         '404':
           description: Сущность не найдена
         '422':
-          description: Ошбика валидации
+          description: Ошибка валидации
+        '500':
+          description: Ошибка сервера
 
     put:
       tags:
@@ -277,7 +291,9 @@ paths:
         '404':
           description: Сущность не найдена
         '422':
-          description: Ошбика валидации
+          description: Ошибка валидации
+        '500':
+          description: Ошибка сервера
 
     delete:
       tags:
@@ -298,7 +314,9 @@ paths:
         '404':
           description: Отзыв не найдена
         '422':
-          description: Ошбика валидации
+          description: Ошибка валидации
+        '500':
+          description: Ошибка сервера
 
   /review/byArticle/{article_id}/list:
     get:
@@ -332,7 +350,9 @@ paths:
         '404':
           description: Сущность не найдена
         '422':
-          description: Ошбика валидации
+          description: Ошибка валидации
+        '500':
+          description: Ошибка сервера
 
   /review:
     post:
@@ -358,7 +378,9 @@ paths:
         '404':
           description: Сущность не найдена
         '422':
-          description: Ошбика валидации
+          description: Ошибка валидации
+        '500':
+          description: Ошибка сервера
 
   /article/{article_id}/reaction/{reaction}/action/{action}:
     put:
@@ -401,7 +423,9 @@ paths:
         '404':
           description: Сущность не найдена
         '422':
-          description: Ошбика валидации
+          description: Ошибка валидации
+        '500':
+          description: Ошибка сервера
 
   /subscription/{user_id}/target/{another_user_id}/action/{action}:
     put:
@@ -440,7 +464,9 @@ paths:
         '404':
           description: Сущность не найдена
         '422':
-          description: Ошбика валидации
+          description: Ошибка валидации
+        '500':
+          description: Ошибка сервера
 
   /feed/{user_id}:
     get:
@@ -468,7 +494,9 @@ paths:
         '404':
           description: Сущность не найдена
         '422':
-          description: Ошбика валидации
+          description: Ошибка валидации
+        '500':
+          description: Ошибка сервера
 
 components:
   schemas:
