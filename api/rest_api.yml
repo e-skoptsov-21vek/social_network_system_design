@@ -5,11 +5,11 @@ info:
   version: 1.0.0
 
 tags:
-  - name: article_admin
+  - name: post_admin
     description: Управление постами путешественников
-  - name: search_article
+  - name: search_post
     description: Посты путешественников
-  - name: review
+  - name: comment
     description: Оценки и комментарии к постам
   - name: reaction
     description: Реакции к постам
@@ -19,13 +19,13 @@ tags:
     description: Ленты пользователей
 
 paths:
-  /article/{id}:
+  /posts/{id}:
     get:
       tags:
-        - article_admin
-      summary: Получение статьи
+        - post_admin
+      summary: Получение поста
       description: Получение по ID
-      operationId: getArticle
+      operationId: getPost
       parameters:
         - name: id
           in: path
@@ -39,7 +39,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ManagedArticle'
+                $ref: '#/components/schemas/ManagedPost'
         '400':
           description: Некорректный ID
         '404':
@@ -51,10 +51,10 @@ paths:
 
     put:
       tags:
-        - article_admin
-      summary: Обновление статьи
-      description: Обновление статьи по ID
-      operationId: updateArticle
+        - post_admin
+      summary: Обновление поста
+      description: Обновление поста по ID
+      operationId: updatePost
       parameters:
         - name: id
           in: path
@@ -63,11 +63,11 @@ paths:
           schema:
             type: integer
       requestBody:
-        description: Обновление существующей статьи в хранилище
+        description: Обновление существующего поста в хранилище
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ManagedArticle'
+              $ref: '#/components/schemas/ManagedPost'
         required: true
       responses:
         '200':
@@ -75,7 +75,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ManagedArticle'
+                $ref: '#/components/schemas/ManagedPost'
         '400':
           description: Некорректный ID
         '404':
@@ -87,10 +87,10 @@ paths:
 
     delete:
       tags:
-        - article_admin
-      summary: Удаление статьи
-      description: Удаление статьи по ID
-      operationId: deleteArticle
+        - post_admin
+      summary: Удаление поста
+      description: Удаление поста по ID
+      operationId: deletePost
       parameters:
         - name: id
           in: path
@@ -108,13 +108,13 @@ paths:
         '500':
           description: Ошибка сервера
 
-  /article/byUser/{user_id}/list:
+  /posts/{user_id}/list:
     get:
       tags:
-        - article_admin
-      summary: Получение статей пользователя
-      description: Получение статей пользователя
-      operationId: getArticleByUser
+        - post_admin
+      summary: Получение поста пользователя
+      description: Получение поста пользователя
+      operationId: getPostByUser
       parameters:
         - name: user_id
           in: path
@@ -136,7 +136,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ManagedArticle'
+                  $ref: '#/components/schemas/ManagedPost'
         '404':
           description: Сущность не найдена
         '422':
@@ -144,19 +144,19 @@ paths:
         '500':
           description: Ошибка сервера
 
-  /article:
+  /posts:
     post:
       tags:
-        - article_admin
-      summary: Создание статьи
-      description: Создание статьи
-      operationId: createArticle
+        - post_admin
+      summary: Создание поста
+      description: Создание поста
+      operationId: createPost
       requestBody:
-        description: Создание статьи в хранилище
+        description: Создание поста в хранилище
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreatedArticle'
+              $ref: '#/components/schemas/CreatedPost'
         required: true
       responses:
         '200':
@@ -164,7 +164,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ManagedArticle'
+                $ref: '#/components/schemas/ManagedPost'
         '404':
           description: Сущность не найдена
         '422':
@@ -172,13 +172,13 @@ paths:
         '500':
           description: Ошибка сервера
 
-  /article-search:
+  /post-search:
     get:
       tags:
-        - search_article
-      summary: Поиск статей пользователя
-      description: Поиск статей пользователя
-      operationId: searchArticles
+        - search_post
+      summary: Поиск поста пользователя
+      description: Поиск поста пользователя
+      operationId: searchPosts
       parameters:
         - name: query
           in: query
@@ -221,7 +221,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ViewedArticle'
+                  $ref: '#/components/schemas/ViewedPost'
         '404':
           description: Сущность не найдена
         '422':
@@ -229,13 +229,13 @@ paths:
         '500':
           description: Ошибка сервера
 
-  /review/{id}:
+  /comments/{id}:
     get:
       tags:
-        - review
-      summary: Получение отзыва
+        - comment
+      summary: Получение комментария
       description: Получение по ID
-      operationId: getReview
+      operationId: getComment
       parameters:
         - name: id
           in: path
@@ -249,7 +249,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Review'
+                $ref: '#/components/schemas/Comment'
         '400':
           description: Некорректный ID
         '404':
@@ -261,10 +261,10 @@ paths:
 
     put:
       tags:
-        - review
-      summary: Обновление отзыва
-      description: Обновление отзыва
-      operationId: updateReview
+        - comment
+      summary: Обновление комментария
+      description: Обновление комментария
+      operationId: updateComment
       parameters:
         - name: id
           in: path
@@ -273,11 +273,11 @@ paths:
           schema:
             type: integer
       requestBody:
-        description: Обновление существующего отзыва в хранилище
+        description: Обновление существующего комментария в хранилище
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Review'
+              $ref: '#/components/schemas/Comment'
         required: true
       responses:
         '200':
@@ -285,7 +285,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Review'
+                $ref: '#/components/schemas/Comment'
         '400':
           description: Некорректный ID
         '404':
@@ -297,10 +297,10 @@ paths:
 
     delete:
       tags:
-        - review
-      summary: Удаление отзыва
-      description: Удаление отзыва
-      operationId: deleteReview
+        - comment
+      summary: Удаление комментария
+      description: Удаление комментария
+      operationId: deleteComment
       parameters:
         - name: id
           in: path
@@ -312,23 +312,23 @@ paths:
         '200':
           description: Successful operation
         '404':
-          description: Отзыв не найдена
+          description: Комментарий не найден
         '422':
           description: Ошибка валидации
         '500':
           description: Ошибка сервера
 
-  /review/byArticle/{article_id}/list:
+  /comments/{post_id}/list:
     get:
       tags:
-        - review
-      summary: Получение отзывов по статье
-      description:  Получение отзывов по статье
-      operationId: getReviewByArticle
+        - comment
+      summary: Получение комментариев по посту
+      description:  Получение комментариев по посту
+      operationId: getCommentByPost
       parameters:
-        - name: article_id
+        - name: post_id
           in: path
-          description: ID статьи
+          description: ID поста
           required: true
           schema:
             type: integer
@@ -346,7 +346,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Review'
+                  $ref: '#/components/schemas/Comment'
         '404':
           description: Сущность не найдена
         '422':
@@ -354,19 +354,19 @@ paths:
         '500':
           description: Ошибка сервера
 
-  /review:
+  /comments:
     post:
       tags:
-        - review
-      summary: Создание отзыва
-      description: Создание отзыва
-      operationId: createReview
+        - comment
+      summary: Создание комментария
+      description: Создание комментария
+      operationId: createComment
       requestBody:
-        description: Создание отзыва в хранилище
+        description: Создание комментария в хранилище
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Review'
+              $ref: '#/components/schemas/Comment'
         required: true
       responses:
         '200':
@@ -374,7 +374,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Review'
+                $ref: '#/components/schemas/Comment'
         '404':
           description: Сущность не найдена
         '422':
@@ -382,7 +382,7 @@ paths:
         '500':
           description: Ошибка сервера
 
-  /article/{article_id}/reaction/{reaction}/action/{action}:
+  /posts/{post_id}/reaction/{reaction}/action/{action}:
     put:
       tags:
         - reaction
@@ -390,9 +390,9 @@ paths:
       description: Управление реакциями
       operationId: updateReaction
       parameters:
-        - name: article_id
+        - name: post_id
           in: path
-          description: ID статьи
+          description: ID поста
           required: true
           schema:
             type: integer
@@ -427,7 +427,7 @@ paths:
         '500':
           description: Ошибка сервера
 
-  /subscription/{user_id}/target/{another_user_id}/action/{action}:
+  /subscription/target/{user_id}/action/{action}:
     put:
       tags:
         - subscription
@@ -436,12 +436,6 @@ paths:
       operationId: updateSubscription
       parameters:
         - name: user_id
-          in: path
-          description: ID пользователя, который подписывается
-          required: true
-          schema:
-            type: integer
-        - name: another_user_id
           in: path
           description: ID пользователя, на которого подписываются
           required: true
@@ -482,6 +476,12 @@ paths:
           required: true
           schema:
             type: integer
+        - name: page
+          in: query
+          description: Номер страницы
+          required: true
+          schema:
+            type: integer
       responses:
         '200':
           description: Successful operation
@@ -490,7 +490,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ViewedArticle'
+                  $ref: '#/components/schemas/ViewedPost'
         '404':
           description: Сущность не найдена
         '422':
@@ -500,7 +500,7 @@ paths:
 
 components:
   schemas:
-    CreatedArticle:
+    CreatedPost:
       type: object
       required:
         - id
@@ -534,7 +534,7 @@ components:
           items:
             type: string
             format: binary
-    ManagedArticle:
+    ManagedPost:
       type: object
       required:
         - id
@@ -569,7 +569,7 @@ components:
             type: string
             format: url
             example: cdn.com/img/path/to/file/jpeg
-    ViewedArticle:
+    ViewedPost:
       type: object
       required:
         - id
@@ -606,13 +606,13 @@ components:
             example: cdn.com/img/path/to/file/jpeg
         reactions:
           $ref: '#/components/schemas/Reactions'
-    Review:
+    Comment:
       type: object
       required:
         - id
         - text
         - user_id
-        - article_id
+        - post_id
       properties:
         id:
           type: integer
@@ -627,7 +627,7 @@ components:
           type: integer
           format: int64
           example: 123
-        article_id:
+        post_id:
           type: integer
           format: int64
           example: 456
@@ -643,7 +643,7 @@ components:
       type: object
       required:
         - id
-        - article_id
+        - post_id
         - items
       properties:
         items:
