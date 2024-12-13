@@ -1,0 +1,663 @@
+openapi: 3.0.3
+info:
+  title: Соц. сеть для путешественников
+  description: Описание API соц. сети для путешественников
+  version: 1.0.0
+
+tags:
+  - name: post_admin
+    description: Управление постами путешественников
+  - name: search_post
+    description: Посты путешественников
+  - name: comment
+    description: Оценки и комментарии к постам
+  - name: reaction
+    description: Реакции к постам
+  - name: subscription
+    description: Подписки пользователей
+  - name: feed
+    description: Ленты пользователей
+
+paths:
+  /posts/{id}:
+    get:
+      tags:
+        - post_admin
+      summary: Получение поста
+      description: Получение по ID
+      operationId: getPost
+      parameters:
+        - name: id
+          in: path
+          description: ID сущности
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ManagedPost'
+        '400':
+          description: Некорректный ID
+        '404':
+          description: Сущность не найдена
+        '422':
+          description: Ошибка валидации
+        '500':
+          description: Ошибка сервера
+
+    put:
+      tags:
+        - post_admin
+      summary: Обновление поста
+      description: Обновление поста по ID
+      operationId: updatePost
+      parameters:
+        - name: id
+          in: path
+          description: ID сущности
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Обновление существующего поста в хранилище
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ManagedPost'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ManagedPost'
+        '400':
+          description: Некорректный ID
+        '404':
+          description: Сущность не найдена
+        '422':
+          description: Ошибка валидации
+        '500':
+          description: Ошибка сервера
+
+    delete:
+      tags:
+        - post_admin
+      summary: Удаление поста
+      description: Удаление поста по ID
+      operationId: deletePost
+      parameters:
+        - name: id
+          in: path
+          description: ID сущности
+          required: true
+          schema:
+            type: integer
+      responses:
+        '400':
+          description: Некорректный ID
+        '404':
+          description: Сущность не найдена
+        '422':
+          description: Ошибка валидации
+        '500':
+          description: Ошибка сервера
+
+  /posts/{user_id}/list:
+    get:
+      tags:
+        - post_admin
+      summary: Получение поста пользователя
+      description: Получение поста пользователя
+      operationId: getPostByUser
+      parameters:
+        - name: user_id
+          in: path
+          description: ID пользователя
+          required: true
+          schema:
+            type: integer
+        - name: page
+          in: query
+          description: Номер страницы
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ManagedPost'
+        '404':
+          description: Сущность не найдена
+        '422':
+          description: Ошибка валидации
+        '500':
+          description: Ошибка сервера
+
+  /posts:
+    post:
+      tags:
+        - post_admin
+      summary: Создание поста
+      description: Создание поста
+      operationId: createPost
+      requestBody:
+        description: Создание поста в хранилище
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatedPost'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ManagedPost'
+        '404':
+          description: Сущность не найдена
+        '422':
+          description: Ошибка валидации
+        '500':
+          description: Ошибка сервера
+
+  /post-search:
+    get:
+      tags:
+        - search_post
+      summary: Поиск поста пользователя
+      description: Поиск поста пользователя
+      operationId: searchPosts
+      parameters:
+        - name: query
+          in: query
+          description: Текстовый запрос
+          required: true
+          schema:
+            type: string
+        - name: latitude
+          in: query
+          description: Широта
+          required: true
+          schema:
+            type: number
+        - name: longitude
+          in: query
+          description: Долгота
+          required: true
+          schema:
+            type: number
+        - name: sort
+          in: query
+          description: Сортировка
+          required: true
+          schema:
+            type: string
+            enum:
+              - popularity
+              - relevance
+        - name: page
+          in: query
+          description: Номер страницы
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ViewedPost'
+        '404':
+          description: Сущность не найдена
+        '422':
+          description: Ошибка валидации
+        '500':
+          description: Ошибка сервера
+
+  /comments/{id}:
+    get:
+      tags:
+        - comment
+      summary: Получение комментария
+      description: Получение по ID
+      operationId: getComment
+      parameters:
+        - name: id
+          in: path
+          description: ID сущности
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        '400':
+          description: Некорректный ID
+        '404':
+          description: Сущность не найдена
+        '422':
+          description: Ошибка валидации
+        '500':
+          description: Ошибка сервера
+
+    put:
+      tags:
+        - comment
+      summary: Обновление комментария
+      description: Обновление комментария
+      operationId: updateComment
+      parameters:
+        - name: id
+          in: path
+          description: ID сущности
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Обновление существующего комментария в хранилище
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Comment'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        '400':
+          description: Некорректный ID
+        '404':
+          description: Сущность не найдена
+        '422':
+          description: Ошибка валидации
+        '500':
+          description: Ошибка сервера
+
+    delete:
+      tags:
+        - comment
+      summary: Удаление комментария
+      description: Удаление комментария
+      operationId: deleteComment
+      parameters:
+        - name: id
+          in: path
+          description: ID сущности
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+        '404':
+          description: Комментарий не найден
+        '422':
+          description: Ошибка валидации
+        '500':
+          description: Ошибка сервера
+
+  /comments/{post_id}/list:
+    get:
+      tags:
+        - comment
+      summary: Получение комментариев по посту
+      description:  Получение комментариев по посту
+      operationId: getCommentByPost
+      parameters:
+        - name: post_id
+          in: path
+          description: ID поста
+          required: true
+          schema:
+            type: integer
+        - name: page
+          in: query
+          description: Номер страницы
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Comment'
+        '404':
+          description: Сущность не найдена
+        '422':
+          description: Ошибка валидации
+        '500':
+          description: Ошибка сервера
+
+  /comments:
+    post:
+      tags:
+        - comment
+      summary: Создание комментария
+      description: Создание комментария
+      operationId: createComment
+      requestBody:
+        description: Создание комментария в хранилище
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Comment'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        '404':
+          description: Сущность не найдена
+        '422':
+          description: Ошибка валидации
+        '500':
+          description: Ошибка сервера
+
+  /posts/{post_id}/reaction/{reaction}/action/{action}:
+    put:
+      tags:
+        - reaction
+      summary: Управление реакциями
+      description: Управление реакциями
+      operationId: updateReaction
+      parameters:
+        - name: post_id
+          in: path
+          description: ID поста
+          required: true
+          schema:
+            type: integer
+        - name: reaction
+          in: path
+          description: Тип реакции
+          required: true
+          schema:
+            type: string
+            enum:
+              - like
+              - fire
+              - sad
+        - name: action
+          in: path
+          description: Тип реакции
+          required: true
+          schema:
+            type: string
+            enum:
+              - add
+              - retract
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Некорректный ID
+        '404':
+          description: Сущность не найдена
+        '422':
+          description: Ошибка валидации
+        '500':
+          description: Ошибка сервера
+
+  /subscription/target/{user_id}/action/{action}:
+    put:
+      tags:
+        - subscription
+      summary: Управление подписками
+      description: Управление подписками
+      operationId: updateSubscription
+      parameters:
+        - name: user_id
+          in: path
+          description: ID пользователя, на которого подписываются
+          required: true
+          schema:
+            type: integer
+        - name: action
+          in: path
+          description: Действие
+          required: true
+          schema:
+            type: string
+            enum:
+              - subscribe
+              - unsubscribe
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Некорректный ID
+        '404':
+          description: Сущность не найдена
+        '422':
+          description: Ошибка валидации
+        '500':
+          description: Ошибка сервера
+
+  /feed/{user_id}:
+    get:
+      tags:
+        - feed
+      summary: Лента пользователя
+      description: Получение ленты пользователя
+      operationId: getFeed
+      parameters:
+        - name: user_id
+          in: path
+          description: ID пользователя
+          required: true
+          schema:
+            type: integer
+        - name: page
+          in: query
+          description: Номер страницы
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ViewedPost'
+        '404':
+          description: Сущность не найдена
+        '422':
+          description: Ошибка валидации
+        '500':
+          description: Ошибка сервера
+
+components:
+  schemas:
+    CreatedPost:
+      type: object
+      required:
+        - id
+        - text
+        - user_id
+        - latitude
+        - longitude
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        text:
+          type: string
+          format: text
+          example: Не очень длинный текст
+          maxLength: 1000
+        user_id:
+          type: integer
+          format: int64
+          example: 123
+        latitude:
+          type: number
+          description: Широта
+        longitude:
+          type: number
+          description: Долгота
+        images:
+          type: array
+          maxLength: 5
+          items:
+            type: string
+            format: binary
+    ManagedPost:
+      type: object
+      required:
+        - id
+        - text
+        - user_id
+        - latitude
+        - longitude
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        text:
+          type: string
+          format: text
+          example: Не очень длинный текст
+          maxLength: 1000
+        user_id:
+          type: integer
+          format: int64
+          example: 123
+        latitude:
+          type: number
+          description: Широта
+        longitude:
+          type: number
+          description: Долгота
+        images:
+          type: array
+          maxLength: 5
+          items:
+            type: string
+            format: url
+            example: cdn.com/img/path/to/file/jpeg
+    ViewedPost:
+      type: object
+      required:
+        - id
+        - text
+        - user_id
+        - latitude
+        - longitude
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        text:
+          type: string
+          format: text
+          example: Не очень длинный текст
+          maxLength: 1000
+        user_id:
+          type: integer
+          format: int64
+          example: 123
+        latitude:
+          type: number
+          description: Широта
+        longitude:
+          type: number
+          description: Долгота
+        images:
+          type: array
+          maxLength: 5
+          items:
+            type: string
+            format: url
+            example: cdn.com/img/path/to/file/jpeg
+        reactions:
+          $ref: '#/components/schemas/Reactions'
+    Comment:
+      type: object
+      required:
+        - id
+        - text
+        - user_id
+        - post_id
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        text:
+          type: string
+          format: text
+          example: Не очень длинный текст
+          maxLength: 100
+        user_id:
+          type: integer
+          format: int64
+          example: 123
+        post_id:
+          type: integer
+          format: int64
+          example: 456
+        rating:
+          type: integer
+          enum:
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+    Reactions:
+      type: object
+      required:
+        - id
+        - post_id
+        - items
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                enum:
+                  - like
+                  - fire
+                  - sad
+              count:
+                type: integer
+                format: int64
+                example: 10
