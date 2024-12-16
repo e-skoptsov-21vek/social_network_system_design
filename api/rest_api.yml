@@ -108,7 +108,7 @@ paths:
         '500':
           description: Ошибка сервера
 
-  /posts/{user_id}/list:
+  /posts/{user_id}:
     get:
       tags:
         - post_admin
@@ -180,6 +180,12 @@ paths:
       description: Поиск поста пользователя
       operationId: searchPosts
       parameters:
+        - name: userID
+          in: query
+          description: поиск по ID пользователя
+          required: false
+          schema:
+            type: string
         - name: query
           in: query
           description: Текстовый запрос
@@ -189,13 +195,13 @@ paths:
         - name: latitude
           in: query
           description: Широта
-          required: true
+          required: false
           schema:
             type: number
         - name: longitude
           in: query
           description: Долгота
-          required: true
+          required: false
           schema:
             type: number
         - name: sort
@@ -207,6 +213,7 @@ paths:
             enum:
               - popularity
               - relevance
+              - date
         - name: page
           in: query
           description: Номер страницы
@@ -318,7 +325,7 @@ paths:
         '500':
           description: Ошибка сервера
 
-  /comments/{post_id}/list:
+  /comments/{post_id}:
     get:
       tags:
         - comment
