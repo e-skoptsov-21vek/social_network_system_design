@@ -389,13 +389,13 @@ paths:
         '500':
           description: Ошибка сервера
 
-  /posts/{post_id}/reaction/{reaction}/action/{action}:
-    put:
+  /posts/{post_id}/reaction/{reaction}:
+    post:
       tags:
         - reaction
-      summary: Управление реакциями
-      description: Управление реакциями
-      operationId: updateReaction
+      summary: Добавление реакции
+      description: Добавление реакции
+      operationId: addReaction
       parameters:
         - name: post_id
           in: path
@@ -413,15 +413,40 @@ paths:
               - like
               - fire
               - sad
-        - name: action
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Некорректный ID
+        '404':
+          description: Сущность не найдена
+        '422':
+          description: Ошибка валидации
+        '500':
+          description: Ошибка сервера
+    delete:
+      tags:
+        - reaction
+      summary: Удаление реакции
+      description: Удаление реакции
+      operationId: deleteReaction
+      parameters:
+        - name: post_id
+          in: path
+          description: ID поста
+          required: true
+          schema:
+            type: integer
+        - name: reaction
           in: path
           description: Тип реакции
           required: true
           schema:
             type: string
             enum:
-              - add
-              - retract
+              - like
+              - fire
+              - sad
       responses:
         '200':
           description: Successful operation
