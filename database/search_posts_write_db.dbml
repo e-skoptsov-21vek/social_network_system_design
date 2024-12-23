@@ -1,0 +1,19 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+// Документо-ориентированная или реляционная БД, например MongoDB или Postgres
+
+Table posts {
+  id integer [primary key]
+  body text(1000) [note: 'Content of the post']
+  user_id integer
+  latitude double
+  longitude double
+  images json [note: 'Array of string']
+  created_at timestamp
+}
+
+Table post_popularity {
+  post_id integer [primary key]
+  popularity integer [note: 'Popularity of the post']
+}

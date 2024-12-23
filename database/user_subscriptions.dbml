@@ -1,0 +1,17 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+// Реляционная БД, например Postgres
+
+Table subscriptions {
+  id integer [primary key]
+  user_id_from integer
+  user_id_to integer
+  created_at timestamp
+}
+
+Table subscription_outbox {
+  id integer [primary key]
+  compound_key varchar
+  payload json
+}

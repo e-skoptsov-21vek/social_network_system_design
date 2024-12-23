@@ -1,0 +1,27 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+// Реляционная БД, например Postgres
+
+Table posts {
+  id integer [primary key]
+  text text(1000) [note: 'Content of the post']
+  user_id integer
+  latitude double
+  longitude double
+  created_at timestamp
+}
+
+Table images {
+  id integer [primary key]
+  post_id integer
+  src varchar(255)
+}
+
+Table post_outbox {
+  id integer [primary key]
+  post_id integer
+  payload json
+}
+
+Ref: images.post_id > posts.id // many-to-one
