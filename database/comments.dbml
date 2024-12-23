@@ -1,0 +1,19 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+// Реляционная БД, например Postgres
+
+Table comments {
+  id integer [primary key]
+  post_id integer
+  user_id integer
+  text text(100) [note: 'Content of the comment']
+  rating smallint
+  created_at timestamp
+}
+
+Table comment_outbox {
+  id integer [primary key]
+  comment_id integer
+  payload json
+}

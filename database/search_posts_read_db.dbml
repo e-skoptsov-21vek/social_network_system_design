@@ -1,0 +1,15 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+// Поисковый движок, например ElasticSearch
+
+Table posts {
+  id integer [primary key]
+  body text(1000) [note: 'Content of the post']
+  user_id integer
+  latitude double
+  longitude double
+  images json [note: 'Array of string']
+  popularity integer [note: 'Popularity of the post']
+  created_at timestamp
+}

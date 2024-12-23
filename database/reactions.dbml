@@ -1,0 +1,17 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+// Колоночная БД, например Cassandra
+
+Table reactions {
+  id integer [primary key]
+  user_id integer
+  post_id integer
+  type type
+}
+
+enum type {
+  like
+  fire
+  sad
+}
