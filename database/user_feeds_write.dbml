@@ -1,0 +1,25 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+// Реляционная БД, например Postgres
+
+Table subscriptions {
+  id integer [primary key]
+  user_id_from integer
+  user_id_to integer
+  created_at timestamp
+}
+
+Table posts {
+  id integer [primary key]
+  text text(1000) [note: 'Content of the post']
+  user_id integer
+  latitude double
+  longitude double
+  created_at timestamp
+}
+
+Table post_popularity {
+  post_id integer [primary key]
+  popularity integer [note: 'Popularity of the post']
+}

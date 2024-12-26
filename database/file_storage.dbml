@@ -1,0 +1,9 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+// Файловая БД, например s3-подобное хранилище - S3 или Minio
+
+Table resources {
+  resource_id varchar [primary key]
+  location varchar(255)
+}
