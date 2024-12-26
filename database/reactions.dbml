@@ -4,7 +4,6 @@
 // Колоночная БД, например Cassandra
 
 Table reactions {
-  id integer [primary key]
   user_id integer
   post_id integer
   type type

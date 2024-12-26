@@ -4,7 +4,6 @@
 // Реляционная БД, например Postgres
 
 Table subscriptions {
-  id integer [primary key]
   user_id_from integer
   user_id_to integer
   created_at timestamp

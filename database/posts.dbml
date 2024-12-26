@@ -15,7 +15,7 @@ Table posts {
 Table images {
   id integer [primary key]
   post_id integer
-  src varchar(255)
+  url varchar(255)
 }
 
 Table post_outbox {

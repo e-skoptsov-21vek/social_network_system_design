@@ -7,6 +7,7 @@ Table comments {
   id integer [primary key]
   post_id integer
   user_id integer
+  reply_comment_id integer
   text text(100) [note: 'Content of the comment']
   rating smallint
   created_at timestamp
